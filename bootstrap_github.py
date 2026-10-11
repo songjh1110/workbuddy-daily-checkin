@@ -127,7 +127,7 @@ def put_secret(token, repo_full, name, value):
         return False, "加密失败：%s" % e
     st, _ = api("PUT", "/repos/%s/actions/secrets/%s" % (repo_full, name),
                 token, {"encrypted_value": enc, "key_id": pub["key_id"]})
-    return (st in (204, 200)), ("成功" if st in (204, 200) else "写入失败 HTTP %s" % st)
+    return (st in (200, 201, 204)), ("成功" if st in (200, 201, 204) else "写入失败 HTTP %s" % st)
 
 
 # ------------------------------------------------------------------ 主流程
