@@ -1,0 +1,11 @@
+# 凭据绝不入库
+.env
+*.token
+*refresh*token*.txt
+checkin-rt.json
+
+logs/
+__pycache__/
+*.pyc
+.venv/
+venv/
