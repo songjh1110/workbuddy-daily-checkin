@@ -1,0 +1,42 @@
+name: 每日领取 WorkBuddy 加油站积分
+
+on:
+  schedule:
+    # GitHub Actions 用 UTC；北京时间 = UTC + 8
+    # GitHub 定时有排队延迟，跑两次兜底（签到幂等，重复跑不会有副作用）
+    - cron: '0 1 * * *'    # 北京时间 09:00
+    - cron: '40 1 * * *'   # 北京时间 09:40
+  workflow_dispatch:       # 可在 Actions 页手动点一次立即执行
+
+permissions:
+  contents: read
+
+jobs:
+  claim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 准备 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: 随机延时（打散执行时间）
+        run: sleep $((RANDOM % 240))
+
+      - name: 执行签到
+        env:
+          WB_REFRESH_TOKEN: ${{ secrets.WB_REFRESH_TOKEN }}
+          SERVERCHAN_KEY: ${{ secrets.SERVERCHAN_KEY }}
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+          WECOM_WEBHOOK: ${{ secrets.WECOM_WEBHOOK }}
+          WB_TRAVEL_AUTO: '1'      # 顺带跑派猫猫旅行闭环（先领后派）
+          PUSH_ON_SUCCESS: '1'
+          TZ: Asia/Shanghai
+        run: python main.py
