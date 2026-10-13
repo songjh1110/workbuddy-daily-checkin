@@ -4,8 +4,9 @@ on:
   schedule:
     # GitHub Actions 用 UTC；北京时间 = UTC + 8
     # GitHub 定时有排队延迟，跑两次兜底（签到幂等，重复跑不会有副作用）
-    - cron: '0 1 * * *'    # 北京时间 09:00
-    - cron: '40 1 * * *'   # 北京时间 09:40
+    - cron: '0 17 * * *'    # 北京时间 01:00
+    - cron: '40 17 * * *'   # 北京时间 01:40
+
   workflow_dispatch:       # 可在 Actions 页手动点一次立即执行
 
 permissions:
